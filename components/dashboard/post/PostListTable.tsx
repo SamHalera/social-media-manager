@@ -9,7 +9,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import dayjs from "dayjs";
-import { PostProps } from "@/types/types";
+import { CampaignProps, PostProps } from "@/types/types";
 import { useFiltersPostStore } from "@/stores/filtersPost";
 import { filterAndSortDataPosts } from "@/lib/postHelpers";
 import clsx from "clsx";
@@ -37,9 +37,9 @@ const PostListTable = ({
     createdAtDate,
     searchedValue
   );
-  const handleDeleteTransaction = async (post: PostProps) => {
+  const handleDeleteTransaction = async (item: PostProps) => {
     try {
-      const response = await deletePost(post);
+      const response = await deletePost(item);
       if (response.success) {
         setRefresh(true);
         toast({

@@ -44,18 +44,11 @@ const CreateCampaignForm = ({
     values: z.infer<typeof createCampaignSchema>
   ) => {
     try {
-      let response:
-        | { error: string; succes?: undefined }
-        | { succes: string; error?: undefined } = {
-        succes: "success",
-        error: undefined,
-      };
-
-      response = await createOrEditCampaign(values);
-      if (response.succes) {
+      const response = await createOrEditCampaign(values);
+      if (response.success) {
         toast({
           variant: "default",
-          description: response.succes,
+          description: response.success,
         });
         setRefresh(true);
         setOpen(false);

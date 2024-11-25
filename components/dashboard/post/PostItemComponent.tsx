@@ -1,5 +1,6 @@
 import { PostProps } from "@/types/types";
 import { Post } from "@prisma/client";
+import clsx from "clsx";
 import { CalendarClock } from "lucide-react";
 import Link from "next/link";
 import React from "react";
@@ -21,7 +22,15 @@ const PostItemComponent = ({
         <span className=" w-8 h-8 flex justify-center items-center rounded-full text-white bg-blue-400">
           {index + 1}
         </span>
-        <span className="bg-yellow-100 px-4 flex items-center justify-center rounded-full text-sm">
+        <span
+          className={clsx(
+            " px-4 flex items-center justify-center rounded-full text-sm",
+            {
+              "bg-yellow-300": post.status === "DRAFT",
+              "bg-green-300": post.status === "PUBLISHED",
+            }
+          )}
+        >
           {post.status.toLowerCase()}
         </span>
       </div>

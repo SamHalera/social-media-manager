@@ -48,6 +48,7 @@ model Post{
 model Campaign {
   id  Int     @id @default(autoincrement())
   name String
+  isArchived Boolean @default(false)
   post Post[]
 }
 model Media {

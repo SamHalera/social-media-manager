@@ -12,18 +12,18 @@ import {
 } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
 import { AlertDialogAction } from "@radix-ui/react-alert-dialog";
-import { Trash2 } from "lucide-react";
+import { ArchiveX, Trash2 } from "lucide-react";
 
 import { useRouter } from "next/navigation";
-import { CampaignProps, PostProps } from "@/types/types";
+import { CampaignProps } from "@/types/types";
 
-const AlertDeleteAction = ({
-  deleteToContinue,
+const AlertDeleteOrArchiveCampaign = ({
+  actionToContinue,
   item,
   pathToRedirect,
 }: {
-  deleteToContinue: (item: PostProps) => Promise<void>;
-  item: PostProps;
+  actionToContinue: (item: CampaignProps) => Promise<void>;
+  item: CampaignProps;
   pathToRedirect: string;
 }) => {
   const router = useRouter();
@@ -35,8 +35,11 @@ const AlertDeleteAction = ({
           variant="outline"
           className=" bg-red-200 w-10 h-10 p-2 flex items-center justify-center rounded-full cursor-pointer hover:bg-red-400 duration-500 group"
         >
-          {" "}
-          <Trash2 className="text-red-400 group-hover:text-red-200 duration-500" />
+          {item.post.some((elt) => elt.status === "PUBLISHED") ? (
+            <ArchiveX className="text-red-400 group-hover:text-red-200 duration-500" />
+          ) : (
+            <Trash2 className="text-red-400 group-hover:text-red-200 duration-500" />
+          )}
         </Button>
       </AlertDialogTrigger>
       <AlertDialogContent>
@@ -52,7 +55,7 @@ const AlertDeleteAction = ({
           <AlertDialogCancel className="bg-slate-400">Cancel</AlertDialogCancel>
           <AlertDialogAction
             onClick={async () => {
-              await deleteToContinue(item);
+              await actionToContinue(item);
 
               router.push(pathToRedirect);
             }}
@@ -66,4 +69,4 @@ const AlertDeleteAction = ({
   );
 };
 
-export default AlertDeleteAction;
+export default AlertDeleteOrArchiveCampaign;
