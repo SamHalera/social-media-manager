@@ -10,7 +10,6 @@ export const getCampaignById = async (id: number) => {
     const campaign = await prisma.campaign.findUnique({
       where: {
         id,
-        isArchived: false,
       },
       include: {
         post: {
@@ -31,9 +30,6 @@ export const getCampaignById = async (id: number) => {
 export const getCampaigns = async () => {
   try {
     const campaigns = await prisma.campaign.findMany({
-      where: {
-        isArchived: false,
-      },
       include: {
         post: {
           include: {
