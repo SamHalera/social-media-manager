@@ -4,6 +4,7 @@ type CampaignProps = {
   id: number;
   name: string;
   post: PostProps[];
+  isArchived: boolean;
 };
 
 type PostProps = {

@@ -2,9 +2,11 @@
 
 import { createOrEditCampaign } from "@/actions/campaign";
 import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
 import {
   Form,
   FormControl,
+  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -44,18 +46,11 @@ const CreateCampaignForm = ({
     values: z.infer<typeof createCampaignSchema>
   ) => {
     try {
-      let response:
-        | { error: string; succes?: undefined }
-        | { succes: string; error?: undefined } = {
-        succes: "success",
-        error: undefined,
-      };
-
-      response = await createOrEditCampaign(values);
-      if (response.succes) {
+      const response = await createOrEditCampaign(values);
+      if (response.success) {
         toast({
           variant: "default",
-          description: response.succes,
+          description: response.success,
         });
         setRefresh(true);
         setOpen(false);
@@ -86,14 +81,14 @@ const CreateCampaignForm = ({
             control={form.control}
             render={({ field }) => (
               <FormItem>
-                <FormLabel className="flex gap-2">
+                {/* <FormLabel className="flex gap-2">
                   Campaign ID{" "}
                   <FormMessage className="italic text-xs font-semibold" />
-                </FormLabel>
+                </FormLabel> */}
                 <FormControl>
                   <Input
                     {...field}
-                    type="number"
+                    type="hidden"
                     disabled={true}
                     className={clsx("bg-slate-200", {
                       "border-red-400": form.formState.errors.id,

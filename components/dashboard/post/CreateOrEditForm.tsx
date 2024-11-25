@@ -39,6 +39,7 @@ import dayjs from "dayjs";
 import { CampaignProps, PostProps } from "@/types/types";
 import { Post } from "@prisma/client";
 import { createOrEditPost, deletePost } from "@/actions/post";
+import AlertDeleteAction from "@/components/AlertDeleteAction";
 
 const CreateOrEditForm = ({
   setOpen,
@@ -65,6 +66,31 @@ const CreateOrEditForm = ({
     },
   });
 
+  const handleDeletePost = async (item: PostProps) => {
+    try {
+      const response = await deletePost(item);
+      if (response.success) {
+        setRefresh(true);
+        toast({
+          variant: "default",
+          description: response.success,
+        });
+      }
+      if (response.error) {
+        toast({
+          variant: "destructive",
+          description: response.error,
+        });
+      }
+    } catch (error) {
+      console.error(error);
+      toast({
+        variant: "destructive",
+        description:
+          "Oups! something went wrong while deleting transaction! Try to submit the form again...",
+      });
+    }
+  };
   const onSubmit: SubmitHandler<z.infer<typeof postSchema>> = async (
     values: z.infer<typeof postSchema>
   ) => {
@@ -262,14 +288,11 @@ const CreateOrEditForm = ({
 
           <div className="flex justify-between items-center">
             {data && (
-              <div
-                onClick={async () => {
-                  const response = await deletePost(data);
-                }}
-                className="bg-red-200 px-4 py-2 rounded-md text-red-600 duration-500 hover:bg-red-600 hover:text-red-200 cursor-pointer"
-              >
-                <Trash2 />
-              </div>
+              <AlertDeleteAction
+                item={data}
+                deleteToContinue={handleDeletePost}
+                pathToRedirect={`/dashboard/campaign/${data.campaignId}`}
+              />
             )}
 
             <Button
