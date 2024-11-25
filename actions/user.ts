@@ -11,7 +11,6 @@ export const registerUser = async (values: {
 }) => {
   try {
     const { email, password, firstname, lastname } = values;
-    console.log(values);
 
     const salt = uid2(16);
     const hash = SHA256(password + salt).toString(encBase64);

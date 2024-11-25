@@ -16,8 +16,11 @@ import {
 import {
   ChartNoAxesCombined,
   ChevronRight,
+  Hash,
+  Instagram,
   LayoutDashboard,
   LogOut,
+  Megaphone,
   Settings,
   Wallet,
 } from "lucide-react";
@@ -30,8 +33,9 @@ import {
 import { signOut } from "next-auth/react";
 import { usePathname } from "next/navigation";
 import clsx from "clsx";
+import { Campaign, Post } from "@prisma/client";
 
-export function AppSidebar({ wallets }: { wallets: WalletProps[] | null }) {
+export function AppSidebar({ campaigns }: { campaigns: Campaign[] | null }) {
   const pathname = usePathname();
 
   return (
@@ -59,30 +63,31 @@ export function AppSidebar({ wallets }: { wallets: WalletProps[] | null }) {
             >
               <SidebarMenuItem
                 className={clsx("", {
-                  "text-blue-700": pathname.includes("/dashboard/wallet"),
+                  "text-blue-700": pathname.includes("/dashboard/campaign"),
                 })}
               >
                 <CollapsibleTrigger asChild>
-                  <SidebarMenuButton tooltip="Wallets">
-                    <Wallet />
-                    <span>Wallets</span>
+                  <SidebarMenuButton tooltip="Campaigns">
+                    <Megaphone />
+                    <span>Campaigns</span>
                     <ChevronRight className="ml-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90" />
                   </SidebarMenuButton>
                 </CollapsibleTrigger>
                 <CollapsibleContent>
                   <SidebarMenuSub>
-                    {wallets &&
-                      wallets.map((item) => (
-                        <SidebarMenuSubItem key={item.name}>
+                    {campaigns &&
+                      campaigns.map((campaign) => (
+                        <SidebarMenuSubItem key={campaign.name}>
                           <SidebarMenuSubButton
                             className={clsx({
                               "text-blue-700":
-                                pathname === `/dashboard/wallets/${item.id}`,
+                                pathname ===
+                                `/dashboard/campaign/${campaign.id}`,
                             })}
                             asChild
                           >
-                            <a href={`/dashboard/wallets/${item.id}`}>
-                              <span>{item.name}</span>
+                            <a href={`/dashboard/campaign/${campaign.id}`}>
+                              <span>{campaign.name}</span>
                             </a>
                           </SidebarMenuSubButton>
                         </SidebarMenuSubItem>
@@ -100,6 +105,18 @@ export function AppSidebar({ wallets }: { wallets: WalletProps[] | null }) {
                 <SidebarMenuButton>
                   <ChartNoAxesCombined />
                   <span>Stats</span>
+                </SidebarMenuButton>
+              </a>
+            </SidebarMenuItem>
+            <SidebarMenuItem
+              className={clsx("", {
+                "text-blue-700": pathname === "/dashboard/hash",
+              })}
+            >
+              <a href="/dashboard/hash">
+                <SidebarMenuButton>
+                  <Hash />
+                  <span>Hashtags</span>
                 </SidebarMenuButton>
               </a>
             </SidebarMenuItem>

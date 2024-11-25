@@ -3,7 +3,9 @@ import { AppSidebar } from "@/components/dashboard/AppSidebar";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { redirect } from "next/navigation";
-import { getWallets } from "@/actions/wallet";
+import { getPosts } from "@/actions/post";
+import { getCampaigns } from "@/actions/campaign";
+import { SessionProvider } from "next-auth/react";
 
 export default async function PrivateLayout({
   children,
@@ -16,17 +18,18 @@ export default async function PrivateLayout({
     redirect("/signin?prevUrl=dashboard");
   }
 
-  const wallets = await getWallets();
+  const campaigns = await getCampaigns();
+
   return (
     <SidebarProvider>
       <div className="p-4">
-        <AppSidebar wallets={wallets} />
+        <AppSidebar campaigns={campaigns} />
       </div>
       <div className="w-full">
         <div className="flex gap-3 items-start">
           <SidebarTrigger className="my-4" />
           <h1 className="text-blue-700 text-2xl font-semibold my-4">
-            SpendWise
+            Social Media Manager
           </h1>
         </div>
         {children}

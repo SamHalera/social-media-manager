@@ -16,48 +16,57 @@ datasource db {
 model User {
   id        Int     @id @default(autoincrement())
   email     String  @unique
-  firstname String
+  firstname String  
   lastname  String
   token     String
   hash      String
   salt      String
+  post      Post[]
 
 }
 
-model Transaction{
+model Post{
   id      Int     @id @default(autoincrement())
-  label   String
-  type    TransactionType
-  date    DateTime
-  amount  Int
-  transactionStatus TransactionStatus
-  paymentMethod PaymentMethod
-  wallet Wallet @relation(fields: [walletId], references: [id])
-  walletId  Int
+  name String
+  caption  String
+  hashtag String
+  imagesComment String?
+  status Status
+  createdAt DateTime
+  updatedAt DateTime
+  publishedAt DateTime?
+  // publicationDate DateTime?
+  user User @relation(fields: [userId], references: [id])
+  userId Int
+  campaign Campaign @relation(fields: [campaignId], references: [id])
+  campaignId Int
+  media Media[]
+  
+ 
+}
+
+model Campaign {
+  id  Int     @id @default(autoincrement())
+  name String
+  post Post[]
+}
+model Media {
+  id  Int     @id @default(autoincrement())
+  source String
+  publicId  String
+  post Post? @relation(fields: [postId], references: [id])
+  postId   Int?
+ 
+
+}
+
+enum Status {
+  PUBLISHED
+  DRAFT
 }
 
 
-model Wallet {
-  id Int  @id @default(autoincrement())
-  name String @unique
-  balance Int
-  transaction Transaction[]
 
-}
- enum TransactionStatus {
-  PAST
-  UPCOMING
- }
- enum TransactionType {
-  EXPENSE
-  INCOME
- }
- enum PaymentMethod {
-  CARD
-  CASH
-  CHEQUE
-  TRANSFERT_PAYMENT
-
- }
+ 
 
 

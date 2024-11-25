@@ -1,28 +1,28 @@
 "use client";
 import React, { useEffect, useState } from "react";
 
-import CardItemWalletList from "./CardItemWalletList";
-
 import dynamic from "next/dynamic";
-import { getWallets } from "@/actions/wallet";
 
 import { SkeletonCard } from "../skeletons/SkeletonCard";
 
-const CreateOrEditWalletModal = dynamic(
-  () => import("@/components/dashboard/wallets/CreateOrEditWalletModal")
+import { getCampaigns } from "@/actions/campaign";
+import CardItemCampaignList from "./CardItemCampaignList";
+import { CampaignProps } from "@/types/types";
+
+const CreateOrEditCampaignModal = dynamic(
+  () => import("@/components/dashboard/campaign/CreateOrEditCampaignModal")
 );
 
 const DashboardContent = () => {
   const [refresh, setRefresh] = useState<boolean>(false);
-  const [dataWallets, setDataWallets] = useState<WalletProps[]>();
+  const [dataCampaign, setDataCampaign] = useState<CampaignProps[] | null>();
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const wallets = await getWallets();
-        console.log("wallets==>", wallets);
+        const campaigns = await getCampaigns();
 
-        if (wallets) setDataWallets(wallets);
+        if (campaigns) setDataCampaign(campaigns);
       } catch (error) {
         console.error(error);
       }
@@ -31,15 +31,17 @@ const DashboardContent = () => {
   }, [refresh]);
   return (
     <div className="flex flex-col items-center">
-      <h2 className="text-2xl text-blue-500 mb-4">My Wallets</h2>
+      <h2 className="text-2xl text-blue-500 mb-4">My Campaigns</h2>
       <div className="flex flex-col items-center">
-        <span className="mb-2">add a wallet</span>
-        <CreateOrEditWalletModal setRefresh={setRefresh} />
+        <span className="mb-2">create a campaign</span>
+        <CreateOrEditCampaignModal setRefresh={setRefresh} />
       </div>
       <div className="flex justify-center items-center gap-6 my-10">
-        {dataWallets ? (
-          dataWallets.map((wallet) => {
-            return <CardItemWalletList key={wallet.id} wallet={wallet} />;
+        {dataCampaign ? (
+          dataCampaign.map((campaign) => {
+            return (
+              <CardItemCampaignList key={campaign.id} campaign={campaign} />
+            );
           })
         ) : (
           <>

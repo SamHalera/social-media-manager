@@ -13,13 +13,20 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 
-import { useFiltersStore } from "@/stores/filters";
+import { DateRange } from "react-day-picker";
 
-const FiltersDate = () => {
-  const { date, setDate } = useFiltersStore();
-
+const FiltersDate = ({
+  date,
+  setDate,
+  label,
+}: {
+  date: DateRange | undefined;
+  setDate: (date: DateRange | undefined) => void;
+  label: string;
+}) => {
   return (
-    <div>
+    <div className="flex flex-col items-center gap-2">
+      <div>{label}</div>
       <Popover>
         <PopoverTrigger asChild>
           <Button
@@ -41,7 +48,7 @@ const FiltersDate = () => {
                 format(date.from, "dd/MM/yyyy")
               )
             ) : (
-              <span>Pick a date</span>
+              <span>{label}</span>
             )}
           </Button>
         </PopoverTrigger>

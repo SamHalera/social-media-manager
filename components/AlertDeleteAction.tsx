@@ -15,14 +15,15 @@ import { AlertDialogAction } from "@radix-ui/react-alert-dialog";
 import { Trash2 } from "lucide-react";
 
 import { useRouter } from "next/navigation";
+import { PostProps } from "@/types/types";
 
 const AlertDeleteAction = ({
   deleteToContinue,
-  id,
+  item,
   pathToRedirect,
 }: {
-  deleteToContinue: (id: number) => Promise<void>;
-  id: number;
+  deleteToContinue: (post: PostProps) => Promise<void>;
+  item: PostProps;
   pathToRedirect: string;
 }) => {
   const router = useRouter();
@@ -51,8 +52,8 @@ const AlertDeleteAction = ({
           <AlertDialogCancel className="bg-slate-400">Cancel</AlertDialogCancel>
           <AlertDialogAction
             onClick={async () => {
-              await deleteToContinue(id);
-              console.log("Delete action ");
+              await deleteToContinue(item);
+
               router.push(pathToRedirect);
             }}
             className="bg-red-200 rounded-sm px-4 text-red-500 text-sm hover:text-red-200 hover:bg-red-500 duration-500"

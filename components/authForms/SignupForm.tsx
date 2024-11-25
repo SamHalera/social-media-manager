@@ -35,7 +35,6 @@ const SignupForm = () => {
   const { toast } = useToast();
   const router = useRouter();
   const onSubmit = async (values: z.infer<typeof signupFormSchema>) => {
-    console.log(values);
     try {
       const response = await registerUser(values);
       if (response?.success) {
