@@ -6,7 +6,7 @@ import React, { useEffect, useRef, useState } from "react";
 const FiltersByStatus = () => {
   const [dropped, setDropped] = useState<boolean>(false);
   const { status, setStatus } = useFiltersPostStore();
-  const postStatus = ["DRAFT", "PUBLISHED"];
+  const postStatus = ["DRAFT", "PUBLISHED", "PENDING"];
   const ref = useRef<HTMLDivElement>(null);
   useEffect(() => {
     const handleClickOutSide = (event: MouseEvent) => {

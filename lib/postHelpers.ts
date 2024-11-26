@@ -5,10 +5,11 @@ import { DateRange } from "react-day-picker";
 export const filterAndSortDataPosts = (
   data: PostProps[],
   status: string[],
-  publicationDate: DateRange | undefined,
+  scheduledPublicationDate: DateRange | undefined,
   createdAtDate: DateRange | undefined,
   searchedValue: string
 ) => {
+  console.log("createdAtDate inside function===>", createdAtDate);
   return (
     data
       //   .sort((a, b) => {
@@ -19,17 +20,47 @@ export const filterAndSortDataPosts = (
         if (status.length > 0) return status.includes(elt.status);
         else return elt;
       })
-      //   .filter((elt) => {
-      //     if (publicationDate && publicationDate.from && publicationDate.to) {
-      //       return (
-      //         isEqual(elt.publicationDate, publicationDate.from) ||
-      //         isEqual(elt.publicationDate, publicationDate.to) ||
-      //         (isAfter(elt.publicationDate, publicationDate.from) && isBefore(elt.publicationDate, publicationDate.to))
-      //       );
-      //     } else {
-      //       return elt;
-      //     }
-      //   })
+      .filter((elt) => {
+        if (createdAtDate && createdAtDate.from && createdAtDate.to) {
+          return (
+            isEqual(elt.createdAt, createdAtDate.from) ||
+            isEqual(elt.createdAt, createdAtDate.to) ||
+            (isAfter(elt.createdAt, createdAtDate.from) &&
+              isBefore(elt.createdAt, createdAtDate.to))
+          );
+        } else {
+          return elt;
+        }
+      })
+      .filter((elt) => {
+        if (
+          elt.scheduledPublicationDate &&
+          scheduledPublicationDate &&
+          scheduledPublicationDate.from &&
+          scheduledPublicationDate.to
+        ) {
+          return (
+            isEqual(
+              elt.scheduledPublicationDate,
+              scheduledPublicationDate.from
+            ) ||
+            isEqual(
+              elt.scheduledPublicationDate,
+              scheduledPublicationDate.to
+            ) ||
+            (isAfter(
+              elt.scheduledPublicationDate,
+              scheduledPublicationDate.from
+            ) &&
+              isBefore(
+                elt.scheduledPublicationDate,
+                scheduledPublicationDate.to
+              ))
+          );
+        } else {
+          return elt;
+        }
+      })
       .filter((elt) => {
         if (searchedValue) {
           return (

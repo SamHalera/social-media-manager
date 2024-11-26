@@ -12,12 +12,13 @@ const PostsListComponent = ({
 }) => {
   const [searchedValue, setSearchedValue] = useState<string>("");
   const [inputValue, setInputValue] = useState<string>("");
-  const { status, publicationDate, createdAtDate } = useFiltersPostStore();
+  const { status, scheduledPublicationDate, createdAtDate } =
+    useFiltersPostStore();
 
   const filteredAndSortedPosts = filterAndSortDataPosts(
     dataPosts ?? [],
     status,
-    publicationDate,
+    scheduledPublicationDate,
     createdAtDate,
     searchedValue
   );

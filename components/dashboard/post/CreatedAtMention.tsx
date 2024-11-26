@@ -4,7 +4,7 @@ import React from "react";
 
 const CreatedAtMention = ({ createdAt }: { createdAt: Date }) => {
   return (
-    <div className="text-sm  flex gap-1 items-center">
+    <div className="text-xs flex gap-1 items-center">
       <Calendar />
       created at
       <span className="text-blue-500 font-semibold">

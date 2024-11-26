@@ -24,6 +24,7 @@ const FiltersDate = ({
   setDate: (date: DateRange | undefined) => void;
   label: string;
 }) => {
+  console.log("date from filter===>", date);
   return (
     <div className="flex flex-col items-center gap-2">
       <div>{label}</div>

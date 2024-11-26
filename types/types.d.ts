@@ -17,7 +17,7 @@ type PostProps = {
   createdAt: Date;
   updatedAt: Date;
   publishedAt: Date | null;
-  publicationDate: Date | null;
+  scheduledPublicationDate: Date | null;
   user: User;
   campaignId: number;
   media: Media[];

@@ -3,17 +3,17 @@ import { CalendarClock } from "lucide-react";
 import React from "react";
 
 const ScheduledAtMention = ({
-  publicationDate,
+  scheduledPublicationDate,
 }: {
-  publicationDate: Date | null;
+  scheduledPublicationDate: Date | null;
 }) => {
   return (
-    <div className="text-sm flex items-center gap-1">
+    <div className="text-xs flex items-center gap-1">
       <CalendarClock />
       scheduled on
       <span className="italic font-semibold text-blue-400">
-        {publicationDate
-          ? dayjs(publicationDate).format("DD/MM/YYYY")
+        {scheduledPublicationDate
+          ? dayjs(scheduledPublicationDate).format("DD/MM/YYYY")
           : "no schedule"}
       </span>
     </div>

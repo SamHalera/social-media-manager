@@ -81,7 +81,7 @@ const SchedulePublicationForm = ({
     resolver: zodResolver(schedulePostSchema),
     defaultValues: {
       id: data?.id,
-      publicationDate: data?.publicationDate ?? undefined,
+      scheduledPublicationDate: data?.scheduledPublicationDate ?? undefined,
     },
   });
 
@@ -89,13 +89,13 @@ const SchedulePublicationForm = ({
     values: z.infer<typeof schedulePostSchema>
   ) => {
     try {
-      const { id, publicationDate } = values;
+      const { id, scheduledPublicationDate } = values;
       const [hours, minutes] = timeValue
         .split(":")
         .map((str) => parseInt(str, 10));
 
       const formattedPublicationDate = setHours(
-        setMinutes(publicationDate, minutes),
+        setMinutes(scheduledPublicationDate, minutes),
         hours
       );
 
@@ -115,7 +115,7 @@ const SchedulePublicationForm = ({
   };
   return (
     <div className="flex flex-col gap-4">
-      {data?.publicationDate && (
+      {data?.scheduledPublicationDate && (
         <ResetScheduleButton
           data={data}
           handleResponseToast={handleResponseToast}
@@ -146,7 +146,7 @@ const SchedulePublicationForm = ({
             )}
           />
           <FormField
-            name="publicationDate"
+            name="scheduledPublicationDate"
             control={form.control}
             render={({ field }) => (
               <FormItem>

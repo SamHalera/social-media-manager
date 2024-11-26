@@ -12,6 +12,9 @@ import { PostProps } from "@/types/types";
 import dayjs from "dayjs";
 import clsx from "clsx";
 import SchedulePublicationModal from "./SchedulePublicationModal";
+import CreatedAtMention from "./CreatedAtMention";
+import ScheduledAtMention from "./ScheduledAtMention";
+import PublishedAtMention from "./PublishedAtMention";
 
 const CardSumupPost = ({ post }: { post: PostProps }) => {
   return (
@@ -42,29 +45,20 @@ const CardSumupPost = ({ post }: { post: PostProps }) => {
                   {post.user.firstname}
                 </span>
               </div>
-              <div className="flex gap-2 items-center">
-                <Calendar />
-                created at :{" "}
-                <span className="text-blue-500 font-semibold">
-                  {dayjs(post.createdAt).format("DD/MM/YYYY")}
-                </span>
-              </div>
 
-              <div className="flex flex-col gap-2 items-center">
-                <div className="flex gap-2 items-center">
-                  <CalendarClock />
-                  scheduled at:{" "}
+              <CreatedAtMention createdAt={post.createdAt} />
+              {post.publishedAt ? (
+                <PublishedAtMention publishedAt={post.publishedAt} />
+              ) : (
+                <div className="flex flex-col gap-2 items-center">
+                  <ScheduledAtMention
+                    scheduledPublicationDate={post.scheduledPublicationDate}
+                  />
                   <span className="text-blue-500 font-semibold">
-                    {" "}
-                    {post.publicationDate
-                      ? dayjs(post.publicationDate).format("DD/MM/YYYY")
-                      : "no schedule"}
+                    <SchedulePublicationModal data={post} />
                   </span>
                 </div>
-                <span className="text-blue-500 font-semibold">
-                  <SchedulePublicationModal data={post} />
-                </span>
-              </div>
+              )}
             </div>
           </div>
         </CardDescription>

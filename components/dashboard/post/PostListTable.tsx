@@ -28,12 +28,13 @@ const PostListTable = ({
   const [searchedValue, setSearchedValue] = useState<string>("");
   const [inputValue, setInputValue] = useState<string>("");
   const { toast } = useToast();
-  const { status, publicationDate, createdAtDate } = useFiltersPostStore();
+  const { status, scheduledPublicationDate, createdAtDate } =
+    useFiltersPostStore();
 
   const filteredAndSortedPosts = filterAndSortDataPosts(
     dataPosts ?? [],
     status,
-    publicationDate,
+    scheduledPublicationDate,
     createdAtDate,
     searchedValue
   );

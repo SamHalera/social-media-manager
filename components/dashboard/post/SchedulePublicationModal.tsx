@@ -23,7 +23,7 @@ const SchedulePublicationModal = ({ data }: { data?: PostProps }) => {
   return (
     <AlertDialog open={open} onOpenChange={setOpen}>
       <AlertDialogTrigger asChild>
-        {data?.publicationDate ? (
+        {data?.scheduledPublicationDate ? (
           <Button
             className={clsx(
               "mb-4 bg-blue-200 text-blue-500 hover:bg-blue-500 hover:text-blue-200 text-xs px-2 py-1",
@@ -47,7 +47,9 @@ const SchedulePublicationModal = ({ data }: { data?: PostProps }) => {
         <AlertDialogHeader>
           <AlertDialogTitle>
             {" "}
-            {data?.publicationDate ? "Change date" : "Schedule publication"}
+            {data?.scheduledPublicationDate
+              ? "Change date"
+              : "Schedule publication"}
           </AlertDialogTitle>
           <AlertDialogDescription className="flex"></AlertDialogDescription>
           <div>

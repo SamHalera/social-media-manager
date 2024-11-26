@@ -44,7 +44,6 @@ export const createOrEditPost = async (
     id: number;
     name: string;
     caption: string;
-    // publicationDate?: Date;
     imagesComment?: string | null;
     hashtag: string;
   },
@@ -88,7 +87,6 @@ export const createPost = async (
   values: {
     name: string;
     caption: string;
-    // publicationDate?: Date;
     imagesComment?: string | null;
     hashtag: string;
   },
@@ -148,7 +146,7 @@ export const editPost = async (values: {
   id: number;
   name: string;
   caption: string;
-  publicationDate?: Date;
+  scheduledPublicationDate?: Date;
   imagesComment?: string | null;
   hashtag: string;
 }) => {
@@ -205,14 +203,14 @@ export const deletePost = async (post: PostProps) => {
 
 export const schedulePublicationPost = async (
   id: number,
-  publicationDate: Date | null
+  scheduledPublicationDate: Date | null
 ) => {
   try {
     const scheluedPublicationDate = await prisma.post.update({
       where: { id },
       data: {
-        publicationDate,
-        status: publicationDate ? "PENDING" : "DRAFT",
+        scheduledPublicationDate,
+        status: scheduledPublicationDate ? "PENDING" : "DRAFT",
       },
     });
     if (!scheluedPublicationDate) {

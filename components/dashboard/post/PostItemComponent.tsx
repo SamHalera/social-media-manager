@@ -48,7 +48,9 @@ const PostItemComponent = ({
         {post.publishedAt ? (
           <PublishedAtMention publishedAt={post.publishedAt} />
         ) : (
-          <ScheduledAtMention publicationDate={post.publicationDate} />
+          <ScheduledAtMention
+            scheduledPublicationDate={post.scheduledPublicationDate}
+          />
         )}
       </div>
     </Link>

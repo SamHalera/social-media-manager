@@ -15,18 +15,13 @@ const FiltersPosts = ({
   setInputValue: React.Dispatch<SetStateAction<string>>;
 }) => {
   const {
-    publicationDate,
-    setPublicationDate,
+    scheduledPublicationDate,
+    setScheduledPublicationDate,
     createdAtDate,
     setCreatedAtDate,
   } = useFiltersPostStore();
   return (
     <div className="flex gap-4 items-end justify-center bg-slate-100 rounded-md p-6">
-      {/* <div className="flex gap-3 items-center w-full justify-center">
-        
-      </div> */}
-
-      {/* <div className="flex gap-3 items-center  justify-centerw-full"> */}
       <SearchBarPosts
         inputValue={inputValue}
         setInputValue={setInputValue}
@@ -39,15 +34,10 @@ const FiltersPosts = ({
         label="creation date"
       />
       <FiltersDate
-        date={publicationDate}
-        setDate={setPublicationDate}
-        label="publication date"
+        date={scheduledPublicationDate}
+        setDate={setScheduledPublicationDate}
+        label="scheduled date"
       />
-
-      {/* <FiltersDate />
-      <FiltersStatus />
-      <FiltersPeymentMethod /> */}
-      {/* </div> */}
     </div>
   );
 };

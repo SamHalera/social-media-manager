@@ -1,3 +1,4 @@
+import { schedulePublicationPost } from "@/actions/post";
 import { z } from "zod";
 
 export const postSchema = z.object({
@@ -13,5 +14,7 @@ export const postSchema = z.object({
 
 export const schedulePostSchema = z.object({
   id: z.number(),
-  publicationDate: z.date({ required_error: "Date field is required" }),
+  scheduledPublicationDate: z.date({
+    required_error: "Date field is required",
+  }),
 });
