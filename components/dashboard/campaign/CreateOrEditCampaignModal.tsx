@@ -1,4 +1,4 @@
-import React, { SetStateAction, useState } from "react";
+import React, { useState } from "react";
 import {
   AlertDialog,
   AlertDialogCancel,
@@ -10,19 +10,13 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
-import CreateWalletForm from "./CreateCampaignForm";
+
 import { Pencil, Plus } from "lucide-react";
 import clsx from "clsx";
 import { Campaign } from "@prisma/client";
 import CreateCampaignForm from "./CreateCampaignForm";
 
-const CreateOrEditCampaignModal = ({
-  setRefresh,
-  campaign,
-}: {
-  setRefresh: React.Dispatch<SetStateAction<boolean>>;
-  campaign?: Campaign;
-}) => {
+const CreateOrEditCampaignModal = ({ campaign }: { campaign?: Campaign }) => {
   const [open, setOpen] = useState(false);
   return (
     <AlertDialog open={open} onOpenChange={setOpen}>
@@ -46,11 +40,7 @@ const CreateOrEditCampaignModal = ({
           </AlertDialogTitle>
           <AlertDialogDescription></AlertDialogDescription>
           <div>
-            <CreateCampaignForm
-              setRefresh={setRefresh}
-              setOpen={setOpen}
-              campaign={campaign}
-            />
+            <CreateCampaignForm setOpen={setOpen} campaign={campaign} />
           </div>
         </AlertDialogHeader>
         <AlertDialogFooter>

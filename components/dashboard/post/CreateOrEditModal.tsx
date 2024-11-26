@@ -14,15 +14,12 @@ import { Button } from "@/components/ui/button";
 import { Pencil } from "lucide-react";
 import clsx from "clsx";
 import CreateOrEditForm from "./CreateOrEditForm";
-import { CampaignProps, PostProps } from "@/types/types";
-import { Post } from "@prisma/client";
+import { PostProps } from "@/types/types";
 
 const CreateOrEditModal = ({
-  setRefresh,
   data,
   campaignId,
 }: {
-  setRefresh: React.Dispatch<SetStateAction<boolean>>;
   data?: PostProps;
 
   campaignId: number;
@@ -55,7 +52,6 @@ const CreateOrEditModal = ({
           <AlertDialogDescription></AlertDialogDescription>
           <div>
             <CreateOrEditForm
-              setRefresh={setRefresh}
               setOpen={setOpen}
               data={data}
               campaignId={campaignId}

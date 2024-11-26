@@ -14,6 +14,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/hooks/use-toast";
+import { useRefreshStore } from "@/stores/refresh";
 import { createCampaignSchema } from "@/types/zodSchemas/campaignSchemas";
 
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -26,13 +27,13 @@ import { z } from "zod";
 
 const CreateCampaignForm = ({
   setOpen,
-  setRefresh,
   campaign,
 }: {
-  setRefresh: React.Dispatch<SetStateAction<boolean>>;
   setOpen: React.Dispatch<SetStateAction<boolean>>;
   campaign?: Campaign;
 }) => {
+  const { refresh, setRefresh } = useRefreshStore();
+  console.log("refresh from CreateCampaignForm==>", refresh);
   const { toast } = useToast();
   const form = useForm<z.infer<typeof createCampaignSchema>>({
     resolver: zodResolver(createCampaignSchema),
@@ -52,6 +53,7 @@ const CreateCampaignForm = ({
           variant: "default",
           description: response.success,
         });
+        console.log("refresh from submit==>", refresh);
         setRefresh(true);
         setOpen(false);
       }
@@ -81,10 +83,6 @@ const CreateCampaignForm = ({
             control={form.control}
             render={({ field }) => (
               <FormItem>
-                {/* <FormLabel className="flex gap-2">
-                  Campaign ID{" "}
-                  <FormMessage className="italic text-xs font-semibold" />
-                </FormLabel> */}
                 <FormControl>
                   <Input
                     {...field}

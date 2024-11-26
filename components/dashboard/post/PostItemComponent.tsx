@@ -1,10 +1,10 @@
 import { PostProps } from "@/types/types";
-import { Post } from "@prisma/client";
 import clsx from "clsx";
-import dayjs from "dayjs";
-import { CalendarClock } from "lucide-react";
 import Link from "next/link";
 import React from "react";
+import CreatedAtMention from "./CreatedAtMention";
+import ScheduledAtMention from "./ScheduledAtMention";
+import PublishedAtMention from "./PublishedAtMention";
 
 const PostItemComponent = ({
   post,
@@ -43,14 +43,13 @@ const PostItemComponent = ({
           __html: `"${post.caption.substring(0, 100)} (...)"`,
         }}
       />
-      <div className="text-sm flex items-center gap-1">
-        <CalendarClock />
-        Scheduled on{" "}
-        <span className="italic font-semibold text-blue-400">
-          {post.publicationDate
-            ? dayjs(post.publicationDate).format("DD/MM/YYYY")
-            : "no schedule"}
-        </span>
+      <div className="flex justify-between items-center gap-8">
+        <CreatedAtMention createdAt={post.createdAt} />
+        {post.publishedAt ? (
+          <PublishedAtMention publishedAt={post.publishedAt} />
+        ) : (
+          <ScheduledAtMention publicationDate={post.publicationDate} />
+        )}
       </div>
     </Link>
   );

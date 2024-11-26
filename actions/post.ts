@@ -5,6 +5,12 @@ import { authOptions } from "@/lib/auth";
 import { PostProps } from "@/types/types";
 import { Post, Status } from "@prisma/client";
 import { getServerSession } from "next-auth";
+import utc from "dayjs/plugin/utc";
+import timezone from "dayjs/plugin/timezone";
+import dayjs from "dayjs";
+import { revalidatePath } from "next/cache";
+dayjs.extend(utc);
+dayjs.extend(timezone);
 
 export const getPostById = async (id: number) => {
   try {
@@ -197,17 +203,16 @@ export const deletePost = async (post: PostProps) => {
   }
 };
 
-export const schedulePublicationPost = async (values: {
-  id: number;
-  publicationDate: Date;
-}) => {
+export const schedulePublicationPost = async (
+  id: number,
+  publicationDate: Date | null
+) => {
   try {
-    const { id, publicationDate } = values;
     const scheluedPublicationDate = await prisma.post.update({
       where: { id },
       data: {
         publicationDate,
-        status: "PENDING",
+        status: publicationDate ? "PENDING" : "DRAFT",
       },
     });
     if (!scheluedPublicationDate) {
@@ -215,6 +220,7 @@ export const schedulePublicationPost = async (values: {
         error: "Oups! something went wrong ! Try to submit the form again...",
       };
     }
+    revalidatePath(`/dashboard/post/${id}`);
     return {
       success: "Good news! Post publication has been scheduled successfully.",
     };

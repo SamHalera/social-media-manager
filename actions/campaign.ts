@@ -142,7 +142,9 @@ export const deleteOrArchiveCampaign = async (campaign: CampaignProps) => {
   try {
     if (
       campaign.post.length > 0 &&
-      campaign.post.some((item) => item.status === "PUBLISHED")
+      campaign.post.some(
+        (item) => item.status === "PUBLISHED" || item.status === "PENDING"
+      )
     ) {
       const archived = await prisma.campaign.update({
         where: { id: campaign.id },

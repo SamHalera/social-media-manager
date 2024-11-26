@@ -1,9 +1,6 @@
 import { PostProps } from "@/types/types";
-import { Post } from "@prisma/client";
-import { PencilIcon, Trash2Icon } from "lucide-react";
 import React, { useState } from "react";
 import PostItemComponent from "./PostItemComponent";
-import SearchBarPosts from "../campaign/SearchBarPosts";
 import FiltersPosts from "@/components/filters/FiltersPosts";
 import { useFiltersPostStore } from "@/stores/filtersPost";
 import { filterAndSortDataPosts } from "@/lib/postHelpers";

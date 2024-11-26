@@ -13,13 +13,7 @@ import dayjs from "dayjs";
 import clsx from "clsx";
 import SchedulePublicationModal from "./SchedulePublicationModal";
 
-const CardSumupPost = ({
-  post,
-  setRefresh,
-}: {
-  post: PostProps;
-  setRefresh: React.Dispatch<SetStateAction<boolean>>;
-}) => {
+const CardSumupPost = ({ post }: { post: PostProps }) => {
   return (
     <Card className=" shadow-sm border border-slate-100 group-hover:bg-blue-50 duration-500 w-80">
       <CardHeader>
@@ -68,11 +62,7 @@ const CardSumupPost = ({
                   </span>
                 </div>
                 <span className="text-blue-500 font-semibold">
-                  <SchedulePublicationModal
-                    data={post}
-                    setRefresh={setRefresh}
-                    campaignId={post.campaignId}
-                  />
+                  <SchedulePublicationModal data={post} />
                 </span>
               </div>
             </div>

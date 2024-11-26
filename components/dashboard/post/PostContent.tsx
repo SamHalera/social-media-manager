@@ -8,10 +8,12 @@ import React, { useEffect, useState } from "react";
 import CreateOrEditForm from "./CreateOrEditForm";
 import CardSumupPost from "./CardSumupPost";
 import { PostProps } from "@/types/types";
+import { useRefreshStore } from "@/stores/refresh";
 
 const PostContent = ({ id }: { id: number }) => {
   const [dataPost, setDataPost] = useState<PostProps | null>();
-  const [refresh, setRefresh] = useState<boolean>(false);
+
+  const { refresh, setRefresh } = useRefreshStore();
   const router = useRouter();
   useEffect(() => {
     const fetchdata = async () => {
@@ -19,6 +21,7 @@ const PostContent = ({ id }: { id: number }) => {
         const post = await getPostById(id);
 
         if (post) setDataPost(post);
+        setRefresh(false);
       } catch (error) {
         console.error(error);
       }
@@ -38,11 +41,11 @@ const PostContent = ({ id }: { id: number }) => {
       <div className="p-4">
         {dataPost && (
           <div className="flex flex-col gap-10 items-center">
-            <CardSumupPost post={dataPost} setRefresh={setRefresh} />
+            <CardSumupPost post={dataPost} />
+
             <div className="w-2/3">
               <CreateOrEditForm
                 data={dataPost}
-                setRefresh={setRefresh}
                 campaignId={dataPost.campaignId}
               />
             </div>

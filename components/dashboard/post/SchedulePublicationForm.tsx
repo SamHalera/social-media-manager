@@ -1,7 +1,6 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { Textarea } from "@/components/ui/textarea";
 
 import {
   Form,
@@ -11,13 +10,7 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+
 import { Calendar } from "@/components/ui/calendar";
 import {
   Popover,
@@ -31,33 +24,59 @@ import { postSchema, schedulePostSchema } from "@/types/zodSchemas/postSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import clsx from "clsx";
 
-import React, { SetStateAction } from "react";
+import React, { SetStateAction, useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { z } from "zod";
-import { CalendarIcon, Trash2 } from "lucide-react";
+import { CalendarIcon, CalendarX } from "lucide-react";
 import dayjs from "dayjs";
-import { CampaignProps, PostProps } from "@/types/types";
-import { Post } from "@prisma/client";
-import {
-  createOrEditPost,
-  deletePost,
-  schedulePublicationPost,
-} from "@/actions/post";
-import AlertDeleteAction from "@/components/AlertDeleteAction";
+import { PostProps } from "@/types/types";
+
+import { schedulePublicationPost } from "@/actions/post";
+
+import { setHours, setMinutes } from "date-fns";
+import { useRefreshStore } from "@/stores/refresh";
+import ResetScheduleButton from "./ResetScheduleButton";
 
 const SchedulePublicationForm = ({
   setOpen,
-  setRefresh,
   data,
-  campaignId,
 }: {
-  setRefresh: React.Dispatch<SetStateAction<boolean>>;
   setOpen?: React.Dispatch<SetStateAction<boolean>>;
   data?: PostProps;
-  campaignId: number;
 }) => {
+  const { refresh, setRefresh } = useRefreshStore();
+  const [timeValue, setTimeValue] = useState<string>("00:00");
+
   const { toast } = useToast();
 
+  console.log("refresh==> store==>", refresh);
+  const handleResponseToast = (
+    response:
+      | {
+          error: string;
+          success?: undefined;
+        }
+      | {
+          success: string;
+          error?: undefined;
+        }
+  ) => {
+    if (response.success) {
+      toast({
+        variant: "default",
+        description: response.success,
+      });
+      console.log("ici");
+      setRefresh(true);
+      if (setOpen) setOpen(false);
+    }
+    if (response.error) {
+      toast({
+        variant: "destructive",
+        description: response.error,
+      });
+    }
+  };
   const form = useForm<z.infer<typeof schedulePostSchema>>({
     resolver: zodResolver(schedulePostSchema),
     defaultValues: {
@@ -70,22 +89,22 @@ const SchedulePublicationForm = ({
     values: z.infer<typeof schedulePostSchema>
   ) => {
     try {
-      const response = await schedulePublicationPost(values);
+      const { id, publicationDate } = values;
+      const [hours, minutes] = timeValue
+        .split(":")
+        .map((str) => parseInt(str, 10));
 
-      if (response.success) {
-        toast({
-          variant: "default",
-          description: response.success,
-        });
-        setRefresh(true);
-        if (setOpen) setOpen(false);
-      }
-      if (response.error) {
-        toast({
-          variant: "destructive",
-          description: response.error,
-        });
-      }
+      const formattedPublicationDate = setHours(
+        setMinutes(publicationDate, minutes),
+        hours
+      );
+
+      const response = await schedulePublicationPost(
+        id,
+        formattedPublicationDate
+      );
+
+      handleResponseToast(response);
     } catch (error: any) {
       console.error(error);
       toast({
@@ -95,7 +114,14 @@ const SchedulePublicationForm = ({
     }
   };
   return (
-    <div>
+    <div className="flex flex-col gap-4">
+      {data?.publicationDate && (
+        <ResetScheduleButton
+          data={data}
+          handleResponseToast={handleResponseToast}
+        />
+      )}
+
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(onSubmit)}
@@ -145,13 +171,33 @@ const SchedulePublicationForm = ({
                       )}
                     </Button>
                   </PopoverTrigger>
-                  <PopoverContent className="w-auto p-0">
+                  <PopoverContent className="w-auto p-8">
+                    <label className="text-blue-500 italic">
+                      Set {!form.formState.isDirty && " date first and then "}{" "}
+                      the time:{" "}
+                      <input
+                        className={clsx(
+                          "px-2 rounded-sm border border-slate-300",
+                          {
+                            "bg-slate-300": !form.formState.isDirty,
+                          }
+                        )}
+                        type="time"
+                        value={timeValue}
+                        onChangeCapture={(e) =>
+                          setTimeValue(e.currentTarget.value)
+                        }
+                        disabled={!form.formState.isDirty}
+                      />
+                    </label>
                     <Calendar
                       mode="single"
                       selected={field.value}
                       onSelect={field.onChange}
                       initialFocus
-                      disabled={(date) => date < new Date()}
+                      disabled={(date) =>
+                        date <= new Date(new Date().valueOf() - 86400000)
+                      }
                     />
                   </PopoverContent>
                 </Popover>
