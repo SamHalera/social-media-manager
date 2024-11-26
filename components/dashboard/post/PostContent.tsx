@@ -38,7 +38,7 @@ const PostContent = ({ id }: { id: number }) => {
       <div className="p-4">
         {dataPost && (
           <div className="flex flex-col gap-10 items-center">
-            <CardSumupPost post={dataPost} />
+            <CardSumupPost post={dataPost} setRefresh={setRefresh} />
             <div className="w-2/3">
               <CreateOrEditForm
                 data={dataPost}

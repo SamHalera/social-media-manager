@@ -1,6 +1,7 @@
 import { PostProps } from "@/types/types";
 import { Post } from "@prisma/client";
 import clsx from "clsx";
+import dayjs from "dayjs";
 import { CalendarClock } from "lucide-react";
 import Link from "next/link";
 import React from "react";
@@ -27,6 +28,7 @@ const PostItemComponent = ({
             " px-4 flex items-center justify-center rounded-full text-sm",
             {
               "bg-yellow-300": post.status === "DRAFT",
+              "bg-orange-300": post.status === "PENDING",
               "bg-green-300": post.status === "PUBLISHED",
             }
           )}
@@ -44,7 +46,11 @@ const PostItemComponent = ({
       <div className="text-sm flex items-center gap-1">
         <CalendarClock />
         Scheduled on{" "}
-        <span className="italic font-semibold text-blue-400">no schedule</span>
+        <span className="italic font-semibold text-blue-400">
+          {post.publicationDate
+            ? dayjs(post.publicationDate).format("DD/MM/YYYY")
+            : "no schedule"}
+        </span>
       </div>
     </Link>
   );

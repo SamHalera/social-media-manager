@@ -48,7 +48,11 @@ const DashboardContent = () => {
       <div className="flex justify-center items-center gap-6 my-10">
         {dataCampaign ? (
           dataCampaign
-            .filter((campaign) => campaign.isArchived === archivedState)
+            .filter(
+              (campaign) =>
+                campaign.isArchived === archivedState ||
+                campaign.isArchived === !archivedState
+            )
             .map((campaign) => {
               return (
                 <CardItemCampaignList key={campaign.id} campaign={campaign} />

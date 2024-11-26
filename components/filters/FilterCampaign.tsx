@@ -12,7 +12,14 @@ const FilterCampaign = ({
 }) => {
   return (
     <div className="flex flex-col gap-2 items-center">
-      <span className="text-slate-400 font-semibold">archived</span>
+      <span
+        className={clsx("font-semibold", {
+          "text-slate-400 ": !archivedState,
+          "text-blue-500 ": archivedState,
+        })}
+      >
+        include archived campaigns
+      </span>
       <Switch
         onClick={() => {
           setArchivedState(!archivedState);

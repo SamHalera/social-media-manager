@@ -196,3 +196,31 @@ export const deletePost = async (post: PostProps) => {
     };
   }
 };
+
+export const schedulePublicationPost = async (values: {
+  id: number;
+  publicationDate: Date;
+}) => {
+  try {
+    const { id, publicationDate } = values;
+    const scheluedPublicationDate = await prisma.post.update({
+      where: { id },
+      data: {
+        publicationDate,
+        status: "PENDING",
+      },
+    });
+    if (!scheluedPublicationDate) {
+      return {
+        error: "Oups! something went wrong ! Try to submit the form again...",
+      };
+    }
+    return {
+      success: "Good news! Post publication has been scheduled successfully.",
+    };
+  } catch (error) {
+    return {
+      error: "Oups! something went wrong ! Try to submit the form again...",
+    };
+  }
+};

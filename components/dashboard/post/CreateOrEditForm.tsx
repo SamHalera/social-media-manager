@@ -60,7 +60,7 @@ const CreateOrEditForm = ({
       id: data?.id ?? 0,
       name: data?.name ?? "",
       caption: data ? data.caption : "",
-      // publicationDate: data?.publicationDate,
+
       imagesComment: data?.imagesComment ?? "",
       hashtag: data?.hashtag ?? "",
     },
@@ -131,10 +131,6 @@ const CreateOrEditForm = ({
             control={form.control}
             render={({ field }) => (
               <FormItem>
-                {/* <FormLabel className="flex gap-2">
-                  Post ID{" "}
-                  <FormMessage className="italic text-xs font-semibold" />
-                </FormLabel> */}
                 <FormControl>
                   <Input
                     {...field}
@@ -287,13 +283,15 @@ const CreateOrEditForm = ({
           />
 
           <div className="flex justify-between items-center">
-            {data && (
-              <AlertDeleteAction
-                item={data}
-                deleteToContinue={handleDeletePost}
-                pathToRedirect={`/dashboard/campaign/${data.campaignId}`}
-              />
-            )}
+            <div>
+              {data && (
+                <AlertDeleteAction
+                  item={data}
+                  deleteToContinue={handleDeletePost}
+                  pathToRedirect={`/dashboard/campaign/${data.campaignId}`}
+                />
+              )}
+            </div>
 
             <Button
               className="self-end"
