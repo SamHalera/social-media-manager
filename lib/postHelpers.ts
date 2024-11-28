@@ -9,7 +9,6 @@ export const filterAndSortDataPosts = (
   createdAtDate: DateRange | undefined,
   searchedValue: string
 ) => {
-  console.log("createdAtDate inside function===>", createdAtDate);
   return (
     data
       //   .sort((a, b) => {
@@ -71,4 +70,27 @@ export const filterAndSortDataPosts = (
         return elt;
       })
   );
+};
+
+export const handleStatusQuery = (
+  params: URLSearchParams,
+  status: string[]
+) => {
+  let str: string = "";
+  if (status.length > 0) {
+    status.forEach((elt, index) => {
+      str += `${elt.toLowerCase()}`;
+      if (index < status.length - 1) {
+        str += ",";
+      }
+    });
+    params.set("status", str);
+  } else {
+    params.delete("status");
+  }
+  const queryParams = params.toString();
+  console.log(queryParams);
+  str = queryParams ? `?${queryParams}` : "";
+  console.log("str from status==>", str);
+  return str;
 };

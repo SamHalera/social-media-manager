@@ -9,10 +9,8 @@ type FiltersPostStore = {
   setCreatedAtDate: (date: DateRange | undefined) => void;
   status: string[];
   setStatus: (method: string[]) => void;
-  // showPast: boolean;
-  // setShowPast: (showPast: boolean) => void;
-  // showUpcoming: boolean;
-  // setShowUpcoming: (showUpcoming: boolean) => void;
+  query: string;
+  setQuery: (query: string) => void;
 };
 
 export const useFiltersPostStore = create<FiltersPostStore>()((set) => ({
@@ -26,6 +24,7 @@ export const useFiltersPostStore = create<FiltersPostStore>()((set) => ({
   },
 
   status: [],
+  query: "",
   setStatus: (status: string[]) => {
     set({ status });
   },
@@ -37,5 +36,8 @@ export const useFiltersPostStore = create<FiltersPostStore>()((set) => ({
   },
   setCreatedAtDate: (createdAtDate: DateRange | undefined) => {
     set({ createdAtDate });
+  },
+  setQuery: (query: string) => {
+    set({ query });
   },
 }));
