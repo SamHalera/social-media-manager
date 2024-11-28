@@ -11,35 +11,35 @@ import {
 } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
 
-import { Pencil } from "lucide-react";
 import clsx from "clsx";
-import CreateOrEditForm from "./CreateOrEditForm";
+
 import { PostProps } from "@/types/types";
 
-const CreateOrEditModal = ({
-  data,
-  campaignId,
-}: {
-  data?: PostProps;
+import SchedulePublicationForm from "./SchedulePublicationForm";
 
-  campaignId: number;
-}) => {
+const SchedulePublicationModal = ({ data }: { data?: PostProps }) => {
   const [open, setOpen] = useState(false);
+
   return (
     <AlertDialog open={open} onOpenChange={setOpen}>
       <AlertDialogTrigger asChild>
-        {data ? (
-          <div className=" cursor-pointer h-10 w-10 bg-blue-200 text-blue-700 hover:bg-blue-700 hover:text-blue-200 p-3 duration-500 flex justify-center items-center rounded-full">
-            <Pencil />
-          </div>
-        ) : (
+        {data?.scheduledPublicationDate ? (
           <Button
             className={clsx(
-              "mb-4 bg-blue-200 text-blue-500 hover:bg-blue-500 hover:text-blue-200",
+              "mb-4 bg-blue-200 text-blue-500 hover:bg-blue-500 hover:text-blue-200 text-xs px-2 py-1",
               {}
             )}
           >
-            New post
+            change schedule{" "}
+          </Button>
+        ) : (
+          <Button
+            className={clsx(
+              "mb-4 bg-blue-200 text-blue-500 hover:bg-blue-500 hover:text-blue-200 text-xs px-2 py-1",
+              {}
+            )}
+          >
+            schedule now !
           </Button>
         )}
       </AlertDialogTrigger>
@@ -47,15 +47,13 @@ const CreateOrEditModal = ({
         <AlertDialogHeader>
           <AlertDialogTitle>
             {" "}
-            {data ? `Edit post` : `New post`}
+            {data?.scheduledPublicationDate
+              ? "Change date"
+              : "Schedule publication"}
           </AlertDialogTitle>
-          <AlertDialogDescription></AlertDialogDescription>
+          <AlertDialogDescription className="flex"></AlertDialogDescription>
           <div>
-            <CreateOrEditForm
-              setOpen={setOpen}
-              data={data}
-              campaignId={campaignId}
-            />
+            <SchedulePublicationForm setOpen={setOpen} data={data} />
           </div>
         </AlertDialogHeader>
         <AlertDialogFooter>
@@ -66,4 +64,4 @@ const CreateOrEditModal = ({
   );
 };
 
-export default CreateOrEditModal;
+export default SchedulePublicationModal;

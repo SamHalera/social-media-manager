@@ -1,36 +1,34 @@
 import { PostProps } from "@/types/types";
-import { Post } from "@prisma/client";
-import { PencilIcon, Trash2Icon } from "lucide-react";
 import React, { useState } from "react";
 import PostItemComponent from "./PostItemComponent";
-import SearchBarPosts from "../campaign/SearchBarPosts";
 import FiltersPosts from "@/components/filters/FiltersPosts";
 import { useFiltersPostStore } from "@/stores/filtersPost";
 import { filterAndSortDataPosts } from "@/lib/postHelpers";
+import { useSearchParams } from "next/navigation";
 
 const PostsListComponent = ({
   dataPosts,
 }: {
   dataPosts: PostProps[] | null | undefined;
 }) => {
-  const [searchedValue, setSearchedValue] = useState<string>("");
-  const [inputValue, setInputValue] = useState<string>("");
-  const { status, publicationDate, createdAtDate } = useFiltersPostStore();
+  const searchParams = useSearchParams();
+  const [searchedValue, setSearchedValue] = useState<string>(
+    searchParams.get("search") ?? ""
+  );
+
+  const { status, scheduledPublicationDate, createdAtDate } =
+    useFiltersPostStore();
 
   const filteredAndSortedPosts = filterAndSortDataPosts(
     dataPosts ?? [],
     status,
-    publicationDate,
+    scheduledPublicationDate,
     createdAtDate,
     searchedValue
   );
   return (
     <div className="flex flex-col gap-10 justify-center items-center w-full">
-      <FiltersPosts
-        inputValue={inputValue}
-        setInputValue={setInputValue}
-        setSearchedValue={setSearchedValue}
-      />
+      <FiltersPosts setSearchedValue={setSearchedValue} />
 
       <div className="flex flex-wrap gap-2 justify-start items-center w-full">
         {filteredAndSortedPosts

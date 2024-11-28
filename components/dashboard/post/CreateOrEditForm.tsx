@@ -40,18 +40,18 @@ import { CampaignProps, PostProps } from "@/types/types";
 import { Post } from "@prisma/client";
 import { createOrEditPost, deletePost } from "@/actions/post";
 import AlertDeleteAction from "@/components/AlertDeleteAction";
+import { useRefreshStore } from "@/stores/refresh";
 
 const CreateOrEditForm = ({
   setOpen,
-  setRefresh,
   data,
   campaignId,
 }: {
-  setRefresh: React.Dispatch<SetStateAction<boolean>>;
   setOpen?: React.Dispatch<SetStateAction<boolean>>;
   data?: PostProps;
   campaignId: number;
 }) => {
+  const { refresh, setRefresh } = useRefreshStore();
   const { toast } = useToast();
 
   const form = useForm<z.infer<typeof postSchema>>({
@@ -60,7 +60,7 @@ const CreateOrEditForm = ({
       id: data?.id ?? 0,
       name: data?.name ?? "",
       caption: data ? data.caption : "",
-      // publicationDate: data?.publicationDate,
+
       imagesComment: data?.imagesComment ?? "",
       hashtag: data?.hashtag ?? "",
     },
@@ -131,10 +131,6 @@ const CreateOrEditForm = ({
             control={form.control}
             render={({ field }) => (
               <FormItem>
-                {/* <FormLabel className="flex gap-2">
-                  Post ID{" "}
-                  <FormMessage className="italic text-xs font-semibold" />
-                </FormLabel> */}
                 <FormControl>
                   <Input
                     {...field}
@@ -192,46 +188,6 @@ const CreateOrEditForm = ({
               </FormItem>
             )}
           />
-
-          {/* <FormField
-            name="publicationDate"
-            control={form.control}
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel className="flex gap-2">
-                Publication date{" "}
-                  <FormMessage className="italic text-xs font-semibold" />
-                </FormLabel>
-                <Popover>
-                  <PopoverTrigger asChild>
-                    <Button
-                      variant={"outline"}
-                      className={clsx(
-                        "w-[280px] justify-start text-left font-normal",
-                        !field.value && "text-muted-foreground"
-                      )}
-                    >
-                      <CalendarIcon className="mr-2 h-4 w-4" />
-                      {field.value ? (
-                        dayjs(field.value).format("DD/MM/YYYY")
-                      ) : (
-                        <span>Pick a date</span>
-                      )}
-                    </Button>
-                  </PopoverTrigger>
-                  <PopoverContent className="w-auto p-0">
-                    <Calendar
-                      mode="single"
-                      selected={field.value}
-                      onSelect={field.onChange}
-                      initialFocus
-                      disabled={(date) => date < new Date()}
-                    />
-                  </PopoverContent>
-                </Popover>
-              </FormItem>
-            )}
-          /> */}
           <FormField
             name="caption"
             control={form.control}
@@ -273,13 +229,6 @@ const CreateOrEditForm = ({
                         "border-red-400": form.formState.errors.imagesComment,
                       })}
                     />
-                    {/* <Textarea
-                      {...field}
-                      placeholder="Write a catchy caption"
-                      className={clsx({
-                        "border-red-400": form.formState.errors.imagesComment,
-                      })}
-                    /> */}
                   </FormControl>
                 </FormItem>
               );
@@ -287,13 +236,15 @@ const CreateOrEditForm = ({
           />
 
           <div className="flex justify-between items-center">
-            {data && (
-              <AlertDeleteAction
-                item={data}
-                deleteToContinue={handleDeletePost}
-                pathToRedirect={`/dashboard/campaign/${data.campaignId}`}
-              />
-            )}
+            <div>
+              {data && (
+                <AlertDeleteAction
+                  item={data}
+                  deleteToContinue={handleDeletePost}
+                  pathToRedirect={`/dashboard/campaign/${data.campaignId}`}
+                />
+              )}
+            </div>
 
             <Button
               className="self-end"

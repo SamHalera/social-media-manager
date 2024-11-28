@@ -9,23 +9,24 @@ import { getCampaigns } from "@/actions/campaign";
 import CardItemCampaignList from "./CardItemCampaignList";
 import { CampaignProps } from "@/types/types";
 import FilterCampaign from "../filters/FilterCampaign";
+import { useRefreshStore } from "@/stores/refresh";
 
 const CreateOrEditCampaignModal = dynamic(
   () => import("@/components/dashboard/campaign/CreateOrEditCampaignModal")
 );
 
 const DashboardContent = () => {
-  const [refresh, setRefresh] = useState<boolean>(false);
   const [archivedState, setArchivedState] = useState<boolean>(false);
   const [dataCampaign, setDataCampaign] = useState<CampaignProps[] | null>();
+  const { refresh, setRefresh } = useRefreshStore();
 
-  console.log(archivedState);
   useEffect(() => {
     const fetchData = async () => {
       try {
         const campaigns = await getCampaigns();
 
         if (campaigns) setDataCampaign(campaigns);
+        setRefresh(false);
       } catch (error) {
         console.error(error);
       }
@@ -37,7 +38,7 @@ const DashboardContent = () => {
       <h2 className="text-2xl text-blue-500 mb-4">My Campaigns</h2>
       <div className="flex flex-col items-center">
         <span className="mb-2">create a campaign</span>
-        <CreateOrEditCampaignModal setRefresh={setRefresh} />
+        <CreateOrEditCampaignModal />
       </div>
       <div className="mt-4">
         <FilterCampaign
@@ -48,7 +49,11 @@ const DashboardContent = () => {
       <div className="flex justify-center items-center gap-6 my-10">
         {dataCampaign ? (
           dataCampaign
-            .filter((campaign) => campaign.isArchived === archivedState)
+            .filter(
+              (campaign) =>
+                campaign.isArchived === archivedState ||
+                campaign.isArchived === !archivedState
+            )
             .map((campaign) => {
               return (
                 <CardItemCampaignList key={campaign.id} campaign={campaign} />

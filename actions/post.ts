@@ -5,6 +5,12 @@ import { authOptions } from "@/lib/auth";
 import { PostProps } from "@/types/types";
 import { Post, Status } from "@prisma/client";
 import { getServerSession } from "next-auth";
+import utc from "dayjs/plugin/utc";
+import timezone from "dayjs/plugin/timezone";
+import dayjs from "dayjs";
+import { revalidatePath } from "next/cache";
+dayjs.extend(utc);
+dayjs.extend(timezone);
 
 export const getPostById = async (id: number) => {
   try {
@@ -38,7 +44,6 @@ export const createOrEditPost = async (
     id: number;
     name: string;
     caption: string;
-    // publicationDate?: Date;
     imagesComment?: string | null;
     hashtag: string;
   },
@@ -82,7 +87,6 @@ export const createPost = async (
   values: {
     name: string;
     caption: string;
-    // publicationDate?: Date;
     imagesComment?: string | null;
     hashtag: string;
   },
@@ -142,7 +146,7 @@ export const editPost = async (values: {
   id: number;
   name: string;
   caption: string;
-  publicationDate?: Date;
+  scheduledPublicationDate?: Date;
   imagesComment?: string | null;
   hashtag: string;
 }) => {
@@ -193,6 +197,34 @@ export const deletePost = async (post: PostProps) => {
     return {
       error:
         "Oups! something went wrong while deleting wallet! Try to submit the form again...",
+    };
+  }
+};
+
+export const schedulePublicationPost = async (
+  id: number,
+  scheduledPublicationDate: Date | null
+) => {
+  try {
+    const scheluedPublicationDate = await prisma.post.update({
+      where: { id },
+      data: {
+        scheduledPublicationDate,
+        status: scheduledPublicationDate ? "PENDING" : "DRAFT",
+      },
+    });
+    if (!scheluedPublicationDate) {
+      return {
+        error: "Oups! something went wrong ! Try to submit the form again...",
+      };
+    }
+    revalidatePath(`/dashboard/post/${id}`);
+    return {
+      success: "Good news! Post publication has been scheduled successfully.",
+    };
+  } catch (error) {
+    return {
+      error: "Oups! something went wrong ! Try to submit the form again...",
     };
   }
 };

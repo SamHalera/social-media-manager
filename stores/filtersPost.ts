@@ -3,20 +3,18 @@ import { DateRange } from "react-day-picker";
 import { create } from "zustand";
 
 type FiltersPostStore = {
-  publicationDate: DateRange | undefined;
-  setPublicationDate: (date: DateRange | undefined) => void;
+  scheduledPublicationDate: DateRange | undefined;
+  setScheduledPublicationDate: (date: DateRange | undefined) => void;
   createdAtDate: DateRange | undefined;
   setCreatedAtDate: (date: DateRange | undefined) => void;
   status: string[];
   setStatus: (method: string[]) => void;
-  // showPast: boolean;
-  // setShowPast: (showPast: boolean) => void;
-  // showUpcoming: boolean;
-  // setShowUpcoming: (showUpcoming: boolean) => void;
+  query: string;
+  setQuery: (query: string) => void;
 };
 
 export const useFiltersPostStore = create<FiltersPostStore>()((set) => ({
-  publicationDate: {
+  scheduledPublicationDate: {
     from: startOfMonth(new Date()),
     to: addDays(startOfMonth(new Date()), getDaysInMonth(new Date()) - 1),
   },
@@ -24,22 +22,22 @@ export const useFiltersPostStore = create<FiltersPostStore>()((set) => ({
     from: startOfMonth(new Date()),
     to: addDays(startOfMonth(new Date()), getDaysInMonth(new Date()) - 1),
   },
-  // showPast: false,
-  // showUpcoming: false,
+
   status: [],
+  query: "",
   setStatus: (status: string[]) => {
     set({ status });
   },
-  // setShowPast: (showPast: boolean) => {
-  //   set({ showPast });
-  // },
-  // setShowUpcoming: (showUpcoming: boolean) => {
-  //   set({ showUpcoming });
-  // },
-  setPublicationDate: (publicationDate: DateRange | undefined) => {
-    set({ publicationDate });
+
+  setScheduledPublicationDate: (
+    scheduledPublicationDate: DateRange | undefined
+  ) => {
+    set({ scheduledPublicationDate });
   },
   setCreatedAtDate: (createdAtDate: DateRange | undefined) => {
     set({ createdAtDate });
+  },
+  setQuery: (query: string) => {
+    set({ query });
   },
 }));

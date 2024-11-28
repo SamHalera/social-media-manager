@@ -1,13 +1,29 @@
 import { useFiltersPostStore } from "@/stores/filtersPost";
 import clsx from "clsx";
 import { ChevronDown, ChevronUp } from "lucide-react";
-import React, { useEffect, useRef, useState } from "react";
 
-const FiltersByStatus = () => {
+import React, { useEffect, useRef, useState } from "react";
+import CheckBox from "./CheckBox";
+
+const FiltersByStatus = ({ params }: { params: URLSearchParams }) => {
   const [dropped, setDropped] = useState<boolean>(false);
-  const { status, setStatus } = useFiltersPostStore();
-  const postStatus = ["DRAFT", "PUBLISHED"];
+
+  const { status, setStatus, query, setQuery } = useFiltersPostStore();
+
+  const postStatus = ["DRAFT", "PUBLISHED", "PENDING"];
   const ref = useRef<HTMLDivElement>(null);
+
+  const handleCheckValue = (checkedValue: string) => {
+    if (status.includes(checkedValue)) {
+      const index = status.indexOf(checkedValue);
+
+      status.splice(index, 1);
+
+      setStatus(status);
+    } else {
+      setStatus([...status, checkedValue]);
+    }
+  };
   useEffect(() => {
     const handleClickOutSide = (event: MouseEvent) => {
       if (ref.current && !ref.current.contains(event.target as Node)) {
@@ -19,6 +35,7 @@ const FiltersByStatus = () => {
       document.removeEventListener("click", handleClickOutSide);
     };
   }, [dropped]);
+
   return (
     <div ref={ref} className="relative">
       <div
@@ -62,28 +79,12 @@ const FiltersByStatus = () => {
       >
         {postStatus.map((eltStatus) => {
           return (
-            <div key={eltStatus} className="form-control">
-              <label className="flex gap-3 items-center cursor-pointer">
-                <input
-                  onChange={(e) => {
-                    const checkedValue = e.currentTarget.value;
-
-                    if (status.includes(checkedValue)) {
-                      const index = status.indexOf(checkedValue);
-                      status.splice(index, 1);
-                      setStatus(status);
-                    } else {
-                      setStatus([...status, checkedValue]);
-                    }
-                  }}
-                  type="checkbox"
-                  className="checkbox checkbox-primary checkbox-sm"
-                  value={eltStatus}
-                  defaultChecked={status.includes(eltStatus)}
-                />
-                <span className="label-text">{eltStatus}</span>
-              </label>
-            </div>
+            <CheckBox
+              key={eltStatus}
+              eltStatus={eltStatus}
+              handleCheckValue={handleCheckValue}
+              defaultChecked={status.includes(eltStatus)}
+            />
           );
         })}
       </div>

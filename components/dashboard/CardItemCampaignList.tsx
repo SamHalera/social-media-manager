@@ -9,9 +9,9 @@ import {
 
 import Link from "next/link";
 
-import { Campaign } from "@prisma/client";
 import { CampaignProps } from "@/types/types";
-import { Facebook, Instagram, StickyNote } from "lucide-react";
+import { StickyNote } from "lucide-react";
+import clsx from "clsx";
 
 const CardItemCampaignList = ({ campaign }: { campaign: CampaignProps }) => {
   return (
@@ -19,6 +19,17 @@ const CardItemCampaignList = ({ campaign }: { campaign: CampaignProps }) => {
       <Link href={`/dashboard/campaign/${campaign.id}`} className="group">
         <Card className=" shadow-sm border border-slate-100 group-hover:bg-blue-50 duration-500">
           <CardHeader>
+            <span
+              className={clsx(
+                "self-end px-2 py-1 rounded-full text-xs mb-2 text-slate-700",
+                {
+                  "bg-green-400": !campaign.isArchived,
+                  "bg-yellow-400": campaign.isArchived,
+                }
+              )}
+            >
+              {campaign.isArchived ? "archived" : "active"}
+            </span>
             <CardTitle className="text-center mb-4">
               <span className="">{campaign.name}</span>
             </CardTitle>

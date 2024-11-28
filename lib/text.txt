@@ -1,0 +1,49 @@
+// if (queryParams.includes("?")) {
+//   str = "";
+// } else if (searchValue) {
+//   console.log("here");
+//   str = `?${queryParams}`;
+// } else {
+//   str = "?";
+// }
+// // str = queryParams.includes("?") ? "" : "?";
+
+// status?.forEach((elt, index) => {
+//   if (str === "?") {
+//     if (index === 0) {
+//       console.log(elt);
+//       str += `${elt.toLowerCase()}=true`;
+//     } else {
+//       str += `&${elt.toLowerCase()}=true`;
+//     }
+//   } else {
+//     str += `&${elt.toLowerCase()}=true`;
+//   }
+// });
+
+export const handleSearchForQuery = (
+  params: URLSearchParams,
+  value: string,
+  query: string
+) => {
+  let str: string | null = "";
+  if (value) {
+    params.set("search", value);
+  } else {
+    params.delete("search");
+  }
+  const queryParams = params.toString();
+  console.log("queryParams first==>", queryParams);
+  console.log("query first==>", query);
+
+  str = queryParams ? `?${queryParams}` : "";
+  const prevQueryParams = queryParams;
+  if (query.startsWith("?")) {
+    console.log("hello ?");
+
+    // str.slice(0)
+  }
+  console.log("str final==>", str);
+  return str;
+};
+

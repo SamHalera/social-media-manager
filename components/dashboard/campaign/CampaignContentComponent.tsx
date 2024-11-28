@@ -14,13 +14,13 @@ import CreateOrEditCampaignModal from "./CreateOrEditCampaignModal";
 
 import AlertDeleteOrArchiveCampaign from "@/components/AlertDeleteOrArchiveCampaign";
 import { useToast } from "@/hooks/use-toast";
+import { useRefreshStore } from "@/stores/refresh";
 
 const CampaignContentComponent = ({ campaignId }: { campaignId: number }) => {
   const [dataCampaign, setDataCampaign] = useState<CampaignProps>();
-
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
-  const [refresh, setRefresh] = useState<boolean>(false);
+  const { refresh, setRefresh } = useRefreshStore();
 
   const { toast } = useToast();
 
@@ -65,6 +65,7 @@ const CampaignContentComponent = ({ campaignId }: { campaignId: number }) => {
         console.error(error);
       }
     };
+
     fetchData();
   }, [refresh]);
 
@@ -82,14 +83,11 @@ const CampaignContentComponent = ({ campaignId }: { campaignId: number }) => {
               <div className="flex justify-between gap-10 bg-slate-100 py-4 px-6 rounded-lg">
                 {dataCampaign && (
                   <>
-                    <CreateOrEditCampaignModal
-                      setRefresh={setRefresh}
-                      campaign={dataCampaign}
-                    />
+                    <CreateOrEditCampaignModal campaign={dataCampaign} />
                     <AlertDeleteOrArchiveCampaign
                       item={dataCampaign}
                       actionToContinue={handleDeleteOrArchiveCampaign}
-                      pathToRedirect={`/dashboard/campaign/${dataCampaign?.id}`}
+                      pathToRedirect={`/dashboard`}
                     />
                   </>
                 )}
@@ -97,10 +95,7 @@ const CampaignContentComponent = ({ campaignId }: { campaignId: number }) => {
             </div>
 
             <div className="p-10">
-              <CreateOrEditModal
-                setRefresh={setRefresh}
-                campaignId={campaignId}
-              />
+              <CreateOrEditModal campaignId={campaignId} />
             </div>
 
             <PostsListComponent dataPosts={dataCampaign?.post} />
