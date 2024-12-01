@@ -63,9 +63,6 @@ const CardSumupPost = ({ post }: { post: PostProps }) => {
           </div>
         </CardDescription>
       </CardHeader>
-      <CardContent className="flex gap-6 justify-around">
-        <div className="flex flex-col gap-2 items-center"></div>
-      </CardContent>
     </Card>
   );
 };

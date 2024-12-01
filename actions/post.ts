@@ -3,14 +3,21 @@
 import prisma from "@/db";
 import { authOptions } from "@/lib/auth";
 import { PostProps } from "@/types/types";
-import { Post, Status } from "@prisma/client";
+import { Media, Post, Status } from "@prisma/client";
 import { getServerSession } from "next-auth";
 import utc from "dayjs/plugin/utc";
 import timezone from "dayjs/plugin/timezone";
 import dayjs from "dayjs";
 import { revalidatePath } from "next/cache";
+import { v2 as cloudinary } from "cloudinary";
 dayjs.extend(utc);
 dayjs.extend(timezone);
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
+  secure: true,
+});
 
 export const getPostById = async (id: number) => {
   try {
@@ -226,5 +233,110 @@ export const schedulePublicationPost = async (
     return {
       error: "Oups! something went wrong ! Try to submit the form again...",
     };
+  }
+};
+export const handleUploadMediaForPost = async (
+  mediaPosts: Media[],
+  post: PostProps
+) => {
+  try {
+    if (mediaPosts.length === 0) {
+      await deleteAllMediaFromDBAndCloudinary(post.media);
+    } else {
+      const mediaToCreate = mediaPosts.filter((media) => media.id === 0);
+      const mediaToDelete = post.media.filter((media) => {
+        return !mediaPosts.some((media2) => media2.id === media.id);
+      });
+
+      if (mediaToDelete.length > 0) {
+        await deleteSomeMediaFromDBAndCloudinary(mediaToDelete);
+      }
+      if (mediaToCreate.length > 0) {
+        await createMediaForPost(mediaToCreate);
+      }
+    }
+
+    revalidatePath(`/dashboard/post/${post.id}`);
+    return {
+      success: "Good news! Post have been updated with Media!",
+    };
+  } catch (error) {
+    return {
+      error: "Oups! something went wrong ! Try to submit the form again...",
+    };
+  }
+};
+
+const createMediaForPost = async (mediaPosts: Media[]) => {
+  try {
+    const mediaWithOutId = mediaPosts.map((media) => {
+      const { id, ...remainingMedia } = media;
+      return remainingMedia;
+    });
+    const postUpdatedWithMedia = await prisma.media.createMany({
+      data: mediaWithOutId,
+    });
+
+    if (!postUpdatedWithMedia || postUpdatedWithMedia.count === 0) {
+      return {
+        error: "Oups! something went wrong ! Try to submit the form again...",
+      };
+    }
+    return {
+      success: "Good news! Media have been added to your Post!",
+    };
+  } catch (error) {
+    return {
+      error: "Oups! something went wrong ! Try to submit the form again...",
+    };
+  }
+};
+
+const deleteSomeMediaFromDBAndCloudinary = async (mediaToDelete: Media[]) => {
+  console.log("mediaToDelete==>", mediaToDelete);
+  const mediaToDeletePublicIDsArray = mediaToDelete.map(
+    (media) => media.publicId
+  );
+  const deletResp = await cloudinary.api.delete_resources(
+    mediaToDeletePublicIDsArray,
+    {
+      type: "upload",
+      resource_type: "image",
+    }
+  );
+  if (deletResp) {
+    mediaToDelete.forEach(async (media) => {
+      await prisma.media.delete({
+        where: { id: media.id },
+      });
+    });
+  }
+};
+const deleteAllMediaFromDBAndCloudinary = async (postMedia: Media[]) => {
+  try {
+    postMedia.forEach(async (media) => {
+      const deleteResp = await cloudinary.api.delete_resources(
+        [media.publicId],
+        {
+          type: "upload",
+          resource_type: "image",
+        }
+      );
+      if (deleteResp) {
+        const deletedMedia = await prisma.media.delete({
+          where: {
+            id: media.id,
+          },
+        });
+
+        if (!deletedMedia) {
+          return { error: "Media couldn't be deleted. Try again!" };
+        }
+      }
+    });
+    return { success: "Media have been deleted!" };
+  } catch (error) {
+    console.log("error deletAllMediaFromDBAndCloudinary ==>", error);
+    return { error: "Media couldn't be deleted. Try again!" };
   }
 };

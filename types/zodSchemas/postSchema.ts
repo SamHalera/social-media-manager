@@ -18,3 +18,11 @@ export const schedulePostSchema = z.object({
     required_error: "Date field is required",
   }),
 });
+
+export const mediaPostSchema = z.object({
+  mediaPosts: z.array(
+    z.object({
+      source: z.string({ required_error: "Source is required" }),
+    })
+  ),
+});
