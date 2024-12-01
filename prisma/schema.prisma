@@ -55,8 +55,8 @@ model Media {
   id  Int     @id @default(autoincrement())
   source String
   publicId  String
-  post Post? @relation(fields: [postId], references: [id])
-  postId   Int?
+  post Post @relation(fields: [postId], references: [id])
+  postId   Int
  
 
 }
